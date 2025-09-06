@@ -15,6 +15,9 @@ function App() {
     <>
     <div>
       <WelcomeMessage />
+      <Header />
+      <MainContent />
+      <Footer />
     </div>
       <div>
         <a href="https://vite.dev" target="_blank">
@@ -24,11 +27,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <div>
-      <Header />
-      <MainContent />
-      <Footer />
-    </div>
+     
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
