@@ -1,64 +1,121 @@
-import { useState } from 'react';
-import { fetchUserData } from '../services/githubService';
+import { useState } from "react";
+import { advancedSearchUsers } from "../services/githubService";
 
 export default function Search() {
-  const [username, setUsername] = useState('');
-  const [userData, setUserData] = useState(null);
+  const [username, setUsername] = useState("");
+  const [location, setLocation] = useState("");
+  const [minRepos, setMinRepos] = useState("");
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!username) return;
-
+  const handleSearch = async (e, nextPage = 1) => {
+    e?.preventDefault();
     setLoading(true);
-    setError('');
-    setUserData(null);
-
+    setError("");
     try {
-      const data = await fetchUserData(username);
-      setUserData(data);
+      const data = await advancedSearchUsers({
+        username,
+        location,
+        minRepos,
+        page: nextPage,
+      });
+      // If loading more, append results
+      setResults(nextPage === 1 ? data.items : [...results, ...data.items]);
+      setHasMore(data.total_count > nextPage * 30);
+      setPage(nextPage);
     } catch (err) {
-      // This is where the error message is set
-      setError("Looks like we cant find the user");
+      setError("Looks like we can't find users with those criteria.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="search-container">
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-2xl mx-auto p-4">
+      <form
+        onSubmit={(e) => handleSearch(e)}
+        className="bg-white shadow-md rounded-lg p-6 space-y-4"
+      >
+        <h2 className="text-xl font-bold text-gray-700">Advanced GitHub Search</h2>
+
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter GitHub username"
-          className="border p-2 rounded"
+          placeholder="Username (optional)"
+          className="w-full border p-2 rounded focus:outline-none focus:ring"
         />
-        <button type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded">
+
+        <input
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="Location (e.g. Ethiopia)"
+          className="w-full border p-2 rounded focus:outline-none focus:ring"
+        />
+
+        <input
+          type="number"
+          min="0"
+          value={minRepos}
+          onChange={(e) => setMinRepos(e.target.value)}
+          placeholder="Minimum repositories"
+          className="w-full border p-2 rounded focus:outline-none focus:ring"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
           Search
         </button>
       </form>
 
-      <div className="results mt-4">
-        {loading && <p>Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>} {/* Error message displayed here */}
-        {userData && (
-          <div className="user-card border p-4 rounded flex items-center space-x-4">
-            <img src={userData.avatar_url} alt={userData.login} className="w-16 h-16 rounded-full" />
-            <div>
-              <h2 className="text-lg font-bold">{userData.name || userData.login}</h2>
-              <a
-                href={userData.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600"
-              >
-                View Profile
-              </a>
-            </div>
-          </div>
+      <div className="mt-6">
+        {loading && <p className="text-gray-600">Loading...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        <ul className="space-y-4">
+          {results.map((user) => (
+            <li
+              key={user.id}
+              className="flex items-center space-x-4 bg-gray-100 p-4 rounded shadow-sm"
+            >
+              <img
+                src={user.avatar_url}
+                alt={user.login}
+                className="w-16 h-16 rounded-full"
+              />
+              <div className="flex flex-col">
+                <a
+                  href={user.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-700 font-bold text-lg"
+                >
+                  {user.login}
+                </a>
+                <p className="text-sm text-gray-700">
+                  Location: {user.location ?? "Not specified"}
+                </p>
+                <p className="text-sm text-gray-700">
+                  Public Repos: {user.public_repos ?? "N/A"}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {hasMore && !loading && (
+          <button
+            onClick={(e) => handleSearch(e, page + 1)}
+            className="mt-4 w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-900"
+          >
+            Load More
+          </button>
         )}
       </div>
     </div>
