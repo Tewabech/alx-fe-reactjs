@@ -19,7 +19,8 @@ export default function Search() {
       const data = await fetchUserData(username);
       setUserData(data);
     } catch (err) {
-      setError("Looks like we can't find the user");
+      // This is where the error message is set
+      setError("Looks like we cant find the user");
     } finally {
       setLoading(false);
     }
@@ -42,7 +43,7 @@ export default function Search() {
 
       <div className="results mt-4">
         {loading && <p>Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500">{error}</p>} {/* Error message displayed here */}
         {userData && (
           <div className="user-card border p-4 rounded flex items-center space-x-4">
             <img src={userData.avatar_url} alt={userData.login} className="w-16 h-16 rounded-full" />
