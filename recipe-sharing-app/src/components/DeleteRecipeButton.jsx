@@ -1,14 +1,14 @@
 import React from 'react';
-import recipeStore from './recipeStore';
 import { useNavigate } from 'react-router-dom';
+import useRecipeStore from '../store/recipeStore'; // ✅ Import Zustand store
 
 const DeleteRecipeButton = ({ recipeId }) => {
-  const deleteRecipe = useRecipeStore((state) => state.deleteRecipe);
+  const deleteRecipe = useRecipeStore((state) => state.deleteRecipe); // ✅ useRecipeStore hook
   const navigate = useNavigate();
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this recipe?')) {
-      deleteRecipe(recipeId);
+      deleteRecipe(recipeId); // remove recipe from state
       navigate('/'); // redirect to home or recipe list
     }
   };
