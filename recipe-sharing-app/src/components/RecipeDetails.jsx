@@ -1,9 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import recipeStore from './recipeStore';
+import { useParams, Link } from 'react-router-dom';
+import useRecipeStore from '../store/recipeStore';
+import DeleteRecipeButton from './DeleteRecipeButton';
 
 const RecipeDetails = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // get recipe ID from URL
   const recipe = useRecipeStore((state) =>
     state.recipes.find((r) => r.id === Number(id))
   );
@@ -14,13 +15,19 @@ const RecipeDetails = () => {
     <div className="p-4 border rounded bg-white">
       <h2 className="text-2xl font-bold">{recipe.title}</h2>
       <p className="mt-2">{recipe.description}</p>
-      {recipe.ingredients && (
-        <ul className="mt-2 list-disc list-inside">
-          {recipe.ingredients.map((item, idx) => (
-            <li key={idx}>{item}</li>
-          ))}
-        </ul>
-      )}
+
+      <div className="mt-4 flex gap-2">
+        {/* ✅ Use recipe.id for edit link */}
+        <Link
+          to={`/recipes/${recipe.id}/edit`}
+          className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+        >
+          Edit
+        </Link>
+
+        {/* ✅ Use recipe.id for delete button */}
+        <DeleteRecipeButton recipeId={recipe.id} />
+      </div>
     </div>
   );
 };
