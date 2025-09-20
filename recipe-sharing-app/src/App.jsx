@@ -1,12 +1,11 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import RecipeList from './components/RecipeList';
 import AddRecipeForm from './components/AddRecipeForm';
+import RecipeList from './components/RecipeList';
 import RecipeDetails from './components/RecipeDetails';
 import EditRecipeForm from './components/EditRecipeForm';
-import AddRecipeForm from './components/AddRecipeForm';
-import DeleteRecipeButton from './components/DeleteRecipeButton';
+import SearchBar from './components/SearchBar';
 
 function App() {
   return (
@@ -18,8 +17,9 @@ function App() {
             path="/"
             element={
               <>
+                <SearchBar />          {/* ✅ Search input */}
                 <AddRecipeForm />
-                <RecipeList />
+                <RecipeList />          {/* ✅ Shows filtered recipes */}
               </>
             }
           />

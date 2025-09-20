@@ -1,21 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import useRecipeStore from '../store/recipeStore'; // ✅ import Zustand store
+import useRecipeStore from '../store/recipeStore';
 
 const RecipeList = () => {
-  // ✅ get recipes from Zustand store
-  const recipes = useRecipeStore((state) => state.recipes);
+  const filteredRecipes = useRecipeStore((state) => state.filteredRecipes);
 
-  if (recipes.length === 0) return <p className="text-gray-500">No recipes added yet.</p>;
+  if (filteredRecipes.length === 0) {
+    return <p className="text-gray-500">No recipes match your search.</p>;
+  }
 
   return (
-    <div className="space-y-4 mt-4">
-      {recipes.map((recipe) => (
+    <div className="space-y-4">
+      {filteredRecipes.map((recipe) => (
         <div
           key={recipe.id}
           className="border p-4 rounded shadow-sm bg-white"
         >
-          {/* Link to recipe details */}
           <Link
             to={`/recipes/${recipe.id}`}
             className="font-bold text-lg text-blue-600 hover:underline"
