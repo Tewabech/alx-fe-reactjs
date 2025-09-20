@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { advancedSearchUsers } from "../services/githubService";
-
+import { fetchUserData } from "../services/githubService";
+//import { fetchUserData } from "../services/githubService";
 export default function Search() {
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");

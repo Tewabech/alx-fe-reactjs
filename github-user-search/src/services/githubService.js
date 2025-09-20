@@ -3,8 +3,16 @@ import axios from "axios";
 /**
  * Advanced search using GitHub's user search endpoint
  * @param {Object} opts { username, location, minRepos, page }
- */
-export async function advancedSearchUsers({ username, location, minRepos, page }) {
+ 
+export async function fetchUserData(username) {
+  try {
+    const response = await axios.get(`https://api.github.com/users/${username}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}*/
+export async function fetchUserData({ username, location, minRepos, page }) {
   // Build query string
   let q = "";
   if (username) q += `${username} in:login `;
