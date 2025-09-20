@@ -23,4 +23,4 @@ const recipeStore = create((set) => ({
   setRecipes: (recipes) => set({ recipes }),
 }));
 
-export default recipeStoreecipeStore;
+export default recipeStore;

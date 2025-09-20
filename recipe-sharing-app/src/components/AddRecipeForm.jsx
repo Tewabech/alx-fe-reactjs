@@ -1,42 +1,32 @@
-import React, { useState } from 'react';
-import useRecipeStore from '../store/recipeStore';
+import { Link } from 'react-router-dom';
+import DeleteRecipeButton from './DeleteRecipeButton';
+import recipeStore from '../store/recipeStore';
+import { useParams } from 'react-router-dom';
 
-const AddRecipeForm = () => {
-  const addRecipe = useRecipeStore((state) => state.addRecipe);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+const RecipeDetails = () => {
+  const { id } = useParams();
+  const recipe = useRecipeStore((state) =>
+    state.recipes.find((r) => r.id === Number(id))
+  );
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!title || !description) return; // simple validation
-    addRecipe({ id: Date.now(), title, description });
-    setTitle('');
-    setDescription('');
-  };
+  if (!recipe) return <p className="text-red-500">Recipe not found.</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 mt-4">
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Title"
-        className="w-full border p-2 rounded"
-      />
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description"
-        className="w-full border p-2 rounded"
-      />
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Add Recipe
-      </button>
-    </form>
+    <div className="p-4 border rounded bg-white">
+      <h2 className="text-2xl font-bold">{recipe.title}</h2>
+      <p className="mt-2">{recipe.description}</p>
+
+      <div className="mt-4 flex gap-2">
+        <Link
+          to={`/recipes/${recipe.id}/edit`}
+          className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+        >
+          Edit
+        </Link>
+        <DeleteRecipeButton recipeId={recipe.id} />
+      </div>
+    </div>
   );
 };
 
-export default AddRecipeForm;
+export default RecipeDetails;
