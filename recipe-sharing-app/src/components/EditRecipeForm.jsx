@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import recipeStore from './recipeStore';
+import useRecipeStore from '../store/recipeStore';
 
 const EditRecipeForm = () => {
   const { id } = useParams();
@@ -15,14 +15,18 @@ const EditRecipeForm = () => {
 
   if (!recipe) return <p className="text-red-500">Recipe not found.</p>;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // ✅ Form submission handler
+  const handleSubmit = (event) => {
+    event.preventDefault(); // prevents page reload
     updateRecipe(recipe.id, { title, description });
-    navigate(`/recipes/${recipe.id}`); // redirect to details
+    navigate(`/recipes/${recipe.id}`); // redirect to details page
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 p-4 border rounded bg-white">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-2 p-4 border rounded bg-white"
+    >
       <input
         type="text"
         value={title}
