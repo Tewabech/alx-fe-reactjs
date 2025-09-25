@@ -22,6 +22,7 @@ function UserProfile() {
           sm:w-24 sm:h-24 
           md:w-36 md:h-36
           mx-auto
+          hover:scale-110 transition-transform
           hover:shadow-xl transition-shadow duration-300 ease-in-out
         "
       />
