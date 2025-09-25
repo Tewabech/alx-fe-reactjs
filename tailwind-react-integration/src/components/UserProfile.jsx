@@ -6,7 +6,8 @@ function UserProfile() {
         bg-gray-100
         sm:p-4
         md:p-8 
-        max-w-xs sm:max-w-sm
+        md:max-w-sm
+        sm:max-w-xs 
         mx-auto my-20
         rounded-lg
         shadow-lg
@@ -17,13 +18,15 @@ function UserProfile() {
         alt="User"
         className="
           rounded-full
-          w-24 h-24 sm:w-36 sm:h-36
+          sm:w-24 h-24 
+          md:w-36 h-36
           mx-auto
         "
       />
       <h1
         className="
-          text-lg sm:text-xl
+          sm:text-lg 
+          md:text-xl
           text-blue-800
           my-4
           text-center
