@@ -5,7 +5,9 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     title: '',
     ingredients: '',
     instructions: '',
+    steps: '',
   });
+
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -20,6 +22,7 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     else if (formData.ingredients.split(',').length < 2)
       newErrors.ingredients = 'At least two ingredients are required';
     if (!formData.instructions) newErrors.instructions = 'Instructions are required';
+    if (!formData.steps) newErrors.steps = 'Preparation steps are required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -28,7 +31,7 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     e.preventDefault();
     if (validate()) {
       onAddRecipe(formData);
-      setFormData({ title: '', ingredients: '', instructions: '' });
+      setFormData({ title: '', ingredients: '', instructions: '', steps: '' });
     }
   };
 
@@ -70,6 +73,18 @@ const AddRecipeForm = ({ onAddRecipe }) => {
           className={`mt-1 block w-full px-3 py-2 border ${errors.instructions ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500`}
         />
         {errors.instructions && <p className="mt-1 text-sm text-red-500">{errors.instructions}</p>}
+      </div>
+      <div className="mb-4">
+        <label htmlFor="steps" className="block text-sm font-medium text-gray-700">Preparation Steps</label>
+        <textarea
+          id="steps"
+          name="steps"
+          value={formData.steps}
+          onChange={handleChange}
+          rows="4"
+          className={`mt-1 block w-full px-3 py-2 border ${errors.steps ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+        />
+        {errors.steps && <p className="mt-1 text-sm text-red-500">{errors.steps}</p>}
       </div>
       <button
         type="submit"
