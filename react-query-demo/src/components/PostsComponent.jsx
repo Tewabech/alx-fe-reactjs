@@ -3,12 +3,11 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchPosts = async () => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-  if (!response.ok) {
-    throw new Error('Network response was not OK');
+  const resp = await fetch('https://jsonplaceholder.typicode.com/posts');
+  if (!resp.ok) {
+    throw new Error('Network response not OK');
   }
-  const data = await response.json();
-  return data;
+  return resp.json();
 };
 
 export default function PostsComponent() {
@@ -19,27 +18,30 @@ export default function PostsComponent() {
     error,
     refetch,
     isFetching,
-  } = useQuery(['posts'], fetchPosts, {
-    // options, e.g. staleTime, cacheTime, etc.
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
+  } = useQuery(
+    ['posts'], 
+    fetchPosts,
+    {
+      staleTime: 1000 * 60 * 5,  // e.g. 5 min
+      refetchOnWindowFocus: false,     // disable the automatic refetch on focus
+      keepPreviousData: true,           // keep old data while fetching new data
+    }
+  );
 
   if (isLoading) {
     return <div>Loading posts…</div>;
   }
-
   if (isError) {
     return (
       <div>
         <p>Error loading posts: {error.message}</p>
-        <button onClick={() => refetch()}>Try again</button>
+        <button onClick={refetch}>Try again</button>
       </div>
     );
   }
-
   return (
     <div>
-      <button onClick={() => refetch()} disabled={isFetching}>
+      <button onClick={refetch} disabled={isFetching}>
         {isFetching ? 'Refreshing…' : 'Refetch Posts'}
       </button>
       <ul>
